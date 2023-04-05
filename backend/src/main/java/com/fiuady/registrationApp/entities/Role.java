@@ -13,7 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(name = "roles")
@@ -30,5 +33,6 @@ public class Role {
 
     @ManyToMany
     @JoinTable(name = "permissionsPerRole")
-    private List<Permission> permissions;
+    @Cascade({CascadeType.ALL})
+    private Set<Permission> permissions;
 }
