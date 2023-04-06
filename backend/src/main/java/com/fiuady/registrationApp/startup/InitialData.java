@@ -39,10 +39,11 @@ public class InitialData {
 
         for (int i = 0; i < 10; i++) {
             User user = new User();
-
             user.setUsername(String.format("user_%s", i + 1));
             user.setPassword(argon2PasswordEncoder.encode("password"));
             user.setRoles(RandomUtils.getRandomElementsFromSet(roles, 5));
+
+            users.add(user);
         }
 
         userRepo.saveAllAndFlush(users);
