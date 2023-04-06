@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
@@ -16,36 +15,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "registrationEvents")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @JsonInclude(value = Include.NON_NULL)
-public class User {
+public class RegistrationEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
-
-    @ManyToMany
-    @JoinTable(name = "rolesPerUser")
-    private Set<Role> roles;
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        User other = (User) obj;
-        if (id == null) {
-            if (other.id != null) return false;
-        } else if (!id.equals(other.id)) return false;
-        return true;
-    }
+    private String name;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
+    private Set<String> attendeesEmails;
+    @ManyToMany private Set<User> registrars;
 }

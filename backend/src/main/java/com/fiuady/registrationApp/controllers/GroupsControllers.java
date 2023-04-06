@@ -1,6 +1,7 @@
 package com.fiuady.registrationApp.controllers;
 
 import com.fiuady.registrationApp.entities.Group;
+import com.fiuady.registrationApp.entities.User;
 import com.fiuady.registrationApp.services.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/groups")
@@ -39,6 +41,11 @@ public class GroupsControllers {
         for (Group group : groups) {
             group.getOwner().setPassword(null);
             group.getOwner().setRoles(null);
+            Set<User> groupParticipants = group.getParticipants();
+            for (User user : groupParticipants) {
+                user.setPassword(null);
+                user.setRoles(null);
+            }
         }
 
         return new ResponseEntity<>(groups, HttpStatus.OK);
