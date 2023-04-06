@@ -13,9 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
 import java.util.Set;
 
 @Entity
@@ -34,6 +31,5 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "rolesPerUser")
-    @Cascade({CascadeType.ALL})
     private Set<Role> roles;
 }
