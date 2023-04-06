@@ -1,6 +1,5 @@
 package com.fiuady.registrationApp.startup;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiuady.registrationApp.entities.Permission;
 import com.fiuady.registrationApp.entities.Role;
 import com.fiuady.registrationApp.entities.User;
@@ -17,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Configuration
 public class InitialData {
@@ -25,16 +25,16 @@ public class InitialData {
     @Autowired private UserRepository userRepo;
     @Autowired private RoleRepository roleRepo;
     @Autowired private PermissionRepository permRepo;
-    @Autowired ObjectMapper objectMapper;
 
     @EventListener(ApplicationReadyEvent.class)
     public void createInitialData() {
-        Set<Permission> permissions = createPermissions();
-        Set<Role> roles = createRoles(permissions);
-        createUsers(roles);
+        createPermissions();
+        createRoles();
+        createUsers();
     }
 
-    private Set<User> createUsers(Set<Role> roles) {
+    private void createUsers() {
+        Set<Role> roles = roleRepo.findAll().stream().collect(Collectors.toSet());
         Set<User> users = new HashSet<>();
 
         for (int i = 0; i < 10; i++) {
@@ -46,12 +46,11 @@ public class InitialData {
             users.add(user);
         }
 
-        userRepo.saveAllAndFlush(users);
-
-        return users;
+        userRepo.saveAll(users);
     }
 
-    private Set<Role> createRoles(Set<Permission> permissions) {
+    private void createRoles() {
+        Set<Permission> permissions = permRepo.findAll().stream().collect(Collectors.toSet());
         Set<Role> roles = new HashSet<>();
 
         for (int i = 0; i < 10; i++) {
@@ -62,12 +61,10 @@ public class InitialData {
             roles.add(role);
         }
 
-        roleRepo.saveAllAndFlush(roles);
-
-        return roles;
+        roleRepo.saveAll(roles);
     }
 
-    private Set<Permission> createPermissions() {
+    private void createPermissions() {
         Set<Permission> permissions = new HashSet<>();
 
         for (int i = 0; i < 10; i++) {
@@ -77,8 +74,6 @@ public class InitialData {
             permissions.add(permission);
         }
 
-        permRepo.saveAllAndFlush(permissions);
-
-        return permissions;
+        permRepo.saveAll(permissions);
     }
 }
