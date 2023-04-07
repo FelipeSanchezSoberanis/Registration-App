@@ -35,7 +35,6 @@ public class InitialData {
 
     private void createUsers() {
         Set<Role> roles = roleRepo.findAll().stream().collect(Collectors.toSet());
-        Set<User> users = new HashSet<>();
 
         for (int i = 0; i < 10; i++) {
             User user = new User();
@@ -43,10 +42,8 @@ public class InitialData {
             user.setPassword(argon2PasswordEncoder.encode("password"));
             user.setRoles(RandomUtils.getRandomElementsFromSet(roles, 5));
 
-            users.add(user);
+            userRepo.save(user);
         }
-
-        userRepo.saveAll(users);
     }
 
     private void createRoles() {
