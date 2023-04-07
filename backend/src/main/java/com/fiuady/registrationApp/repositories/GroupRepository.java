@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface GroupRepository extends JpaRepository<Group, Long> {
     List<Group> findByOwnerId(Long id);
 
+    List<Group> findByOwnerIdOrParticipantsId(Long ownerId, Long participantId);
+
     Optional<Group> findByName(String name);
 }

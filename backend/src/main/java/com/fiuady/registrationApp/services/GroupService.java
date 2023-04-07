@@ -28,7 +28,8 @@ public class GroupService {
     }
 
     public List<Group> getLoggedInUserGroups() {
-        return groupRepository.findByOwnerId(userService.getLoggedInUser().getId());
+        Long id = userService.getLoggedInUser().getId();
+        return groupRepository.findByOwnerIdOrParticipantsId(id, id);
     }
 
     public void deleteById(Long groupId) {
