@@ -34,7 +34,9 @@ public class SecurityConfig {
                 .authenticated();
 
         http.addFilter(new JwtAuthFilter(postgresAuthProvider(), objectMapper));
-        http.addFilterAfter(new JwtVerificationFilter(postgresAuthProvider()), JwtAuthFilter.class);
+        http.addFilterAfter(
+                new JwtVerificationFilter(postgresAuthProvider(), objectMapper),
+                JwtAuthFilter.class);
 
         return http.build();
     }
