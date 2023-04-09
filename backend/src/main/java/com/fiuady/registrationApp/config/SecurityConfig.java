@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.cors().and().csrf().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -54,5 +56,15 @@ public class SecurityConfig {
         daoAuthProvider.setPasswordEncoder(argon2PasswordEncoder());
 
         return daoAuthProvider;
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("*").allowedOriginPatterns("*");
+            }
+        };
     }
 }
