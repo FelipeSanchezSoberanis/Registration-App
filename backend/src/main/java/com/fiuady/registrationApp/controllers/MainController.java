@@ -34,7 +34,6 @@ public class MainController {
                 JWT.require(Algorithm.HMAC512(JwtConstants.SECRET)).build().verify(refreshToken);
 
         String username = jwt.getSubject();
-        Long userId = jwt.getClaim("id").asLong();
 
         AppUserDetails userDetails = postgresUserDetailsService.loadUserByUsername(username);
 
@@ -42,6 +41,7 @@ public class MainController {
                 userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList());
+        Long userId = userDetails.getId();
 
         String accessToken =
                 JWT.create()
