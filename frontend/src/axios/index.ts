@@ -16,12 +16,32 @@ export const publicApiService = {
 
     if (res.status !== 200) return;
 
+    authenticatedApi.defaults.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
+    localStorage.setItem("refreshToken", res.data.refreshToken);
+
     const authStore = useAuthStore();
-    authStore.refreshToken = res.data.refreshToken;
     authStore.isLoggedIn = true;
+
+    router.push({ path: "/groups" });
+  },
+  getNewAccessToken: async (): Promise<void> => {
+    const authStore = useAuthStore();
+    authStore.isLoggedIn = false;
+
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!refreshToken) return;
+
+    const res: AxiosResponse<LoginRequestResponse> = await publicApi.post("/refreshToken", {
+      refreshToken
+    });
+
+    if (res.status !== 200) return;
 
     authenticatedApi.defaults.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
 
-    router.push({ path: "/groups" });
+    authStore.isLoggedIn = true;
+  }
+};
   }
 };
