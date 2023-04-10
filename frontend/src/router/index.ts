@@ -28,7 +28,7 @@ const router = createRouter({
   ]
 });
 
-async function checkAuth(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+async function checkAuth(_to: RouteLocationNormalized, _from: RouteLocationNormalized) {
   const authStore = useAuthStore();
 
   if (authStore.isLoggedIn) return true;
