@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
 import type { Group } from "../types/JavaTypes";
 import { authenticatedApiService } from "../axios/index";
+import { RouterLink } from "vue-router";
 
 const groups: Ref<Group[]> = ref([]);
 
@@ -15,17 +16,25 @@ onMounted(() => {
 
 <template>
   <main class="container pt-3">
-    <div class="row">
+    <div class="row mb-4">
       <div class="col text-center">
         <h1>Groups</h1>
       </div>
     </div>
-    <div class="card row" v-for="group in groups">
-      <div class="col">
-        {{ group.name }}
+    <RouterLink v-for="group in groups" :to="{ path: `/groups/${group.id}` }">
+      <div class="card row p-3 mb-3">
+        <div class="col">
+          <h4>
+            {{ group.name }}
+          </h4>
+        </div>
       </div>
-    </div>
+    </RouterLink>
   </main>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+a {
+  text-decoration: none;
+}
+</style>

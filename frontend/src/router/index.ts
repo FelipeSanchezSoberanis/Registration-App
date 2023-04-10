@@ -3,6 +3,7 @@ import type { RouteLocationNormalized } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import GroupsView from "../views/GroupsView.vue";
+import SingleGroupView from "../views/SingleGroupView.vue";
 import { useAuthStore } from "../stores/auth";
 import { publicApiService } from "../axios";
 
@@ -23,6 +24,12 @@ const router = createRouter({
       path: "/groups",
       name: "groups",
       component: GroupsView,
+      beforeEnter: checkAuth
+    },
+    {
+      path: "/groups/:groupId",
+      name: "group",
+      component: SingleGroupView,
       beforeEnter: checkAuth
     }
   ]
