@@ -11,10 +11,7 @@ authenticatedApi.defaults.baseURL = publicApi.defaults.baseURL;
 
 export const publicApiService = {
   login: async (loginRequest: LoginRequest): Promise<boolean> => {
-    const res: AxiosResponse<LoginRequestResponse> = await publicApi.post(
-      "/login",
-      loginRequest
-    );
+    const res: AxiosResponse<LoginRequestResponse> = await publicApi.post("/login", loginRequest);
 
     if (res.status !== 200) return false;
 
@@ -24,5 +21,5 @@ export const publicApiService = {
     authStore.isLoggedIn = true;
 
     return true;
-  },
+  }
 };

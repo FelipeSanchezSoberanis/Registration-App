@@ -6,7 +6,7 @@ import { publicApiService } from "../axios";
 
 const loginRequest: LoginRequest = reactive({
   username: "",
-  password: "",
+  password: ""
 });
 const correctlyLoggedIn: Ref<null | boolean> = ref(null);
 
@@ -18,26 +18,20 @@ async function login() {
 <template>
   <main>
     <div class="card w-50">
-      <div class="row text-center">
-        <h1>Login</h1>
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <h1>Login</h1>
+        </div>
       </div>
-      <div class="row text-center">
-        <input
-          class="w-75"
-          type="text"
-          name="username"
-          v-model="loginRequest.username"
-        />
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <input type="text" name="username" v-model="loginRequest.username" />
+        </div>
       </div>
-      <div class="row">
-        <input
-          type="password"
-          name="password"
-          v-model="loginRequest.password"
-        />
-      </div>
-      <div class="row">
-        <button @click="login" class="btn">Submit</button>
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <input type="password" name="password" v-model="loginRequest.password" />
+        </div>
       </div>
     </div>
   </main>
