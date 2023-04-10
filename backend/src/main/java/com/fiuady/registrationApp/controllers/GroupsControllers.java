@@ -51,6 +51,16 @@ public class GroupsControllers {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
+    @GetMapping("/{groupId}")
+    public ResponseEntity<Group> getById(@PathVariable Long groupId) {
+        Group group = groupService.getById(groupId);
+
+        group.getOwner().setPassword(null);
+        group.getOwner().setRoles(null);
+
+        return new ResponseEntity<>(group, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteGroup(@PathVariable("id") Long groupId) {
         groupService.deleteById(groupId);
