@@ -2,6 +2,7 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { useAuthStore } from "../stores/auth";
 import type { LoginRequest, LoginRequestResponse } from "../types/AuthTypes";
+import type { Group } from "../types/JavaTypes";
 import router from "../router/index";
 
 const publicApi = axios.create();
@@ -43,5 +44,13 @@ export const publicApiService = {
     authStore.isLoggedIn = true;
   }
 };
+
+export const authenticatedApiService = {
+  getGroups: async (): Promise<Group[]> => {
+    const res: AxiosResponse<Group[]> = await authenticatedApi.get("/groups");
+
+    if (res.status !== 200) return [];
+
+    return res.data;
   }
 };
