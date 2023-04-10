@@ -17,20 +17,37 @@ async function login() {
 
 <template>
   <main>
-    <div class="card w-50">
-      <div class="row justify-content-center">
+    <div class="card w-50 p-5">
+      <div class="row justify-content-center mb-3">
         <div class="col-auto">
           <h1>Login</h1>
         </div>
       </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center mb-3">
         <div class="col-auto">
-          <input type="text" name="username" v-model="loginRequest.username" />
+          <input
+            placeholder="username"
+            type="text"
+            name="username"
+            v-model="loginRequest.username" />
         </div>
       </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center mb-3">
         <div class="col-auto">
-          <input type="password" name="password" v-model="loginRequest.password" />
+          <input
+            placeholder="password"
+            type="password"
+            name="password"
+            v-model="loginRequest.password" />
+        </div>
+      </div>
+      <div class="row justify-content-center mb-3">
+        <div class="col-auto">
+          <button
+            :class="{ disabled: !loginRequest.username.length || !loginRequest.password.length }"
+            class="btn btn-primary">
+            Submit
+          </button>
         </div>
       </div>
     </div>
