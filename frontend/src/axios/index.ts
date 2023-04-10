@@ -31,13 +31,22 @@ export const publicApiService = {
 
     const refreshToken = localStorage.getItem("refreshToken");
 
-    if (!refreshToken) return;
+    if (!refreshToken) {
+      authenticatedApi.defaults.headers["Authorization"] = null;
+      router.push({ path: "/login" });
+      return;
+    }
 
     const res: AxiosResponse<LoginRequestResponse> = await publicApi.post("/refreshToken", {
       refreshToken
     });
 
-    if (res.status !== 200) return;
+    if (res.status !== 200) {
+      authenticatedApi.defaults.headers["Authorization"] = null;
+      localStorage.removeItem("refreshToken");
+      router.push({ path: "/login" });
+      return;
+    }
 
     authenticatedApi.defaults.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
 

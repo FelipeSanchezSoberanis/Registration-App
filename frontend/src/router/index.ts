@@ -37,7 +37,6 @@ async function checkAuth(_to: RouteLocationNormalized, _from: RouteLocationNorma
 
   if (authStore.isLoggedIn) return true;
 
-  router.push({ path: "/login" });
   return false;
 }
 
