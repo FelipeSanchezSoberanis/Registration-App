@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -19,5 +21,13 @@ public class UserService {
                         SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return userRepo.findById(loggedInUserDetails.getId()).get();
+    }
+
+    public Optional<User> getById(Long userId) {
+        return userRepo.findById(userId);
+    }
+
+    public Optional<User> getByUsername(String username) {
+        return userRepo.findByUsername(username);
     }
 }
