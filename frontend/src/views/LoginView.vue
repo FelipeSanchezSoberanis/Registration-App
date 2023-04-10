@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import type { Ref } from "vue";
+import { reactive } from "vue";
 import type { LoginRequest } from "../types/AuthTypes";
 import { publicApiService } from "../axios";
 
@@ -8,10 +7,9 @@ const loginRequest: LoginRequest = reactive({
   username: "",
   password: ""
 });
-const correctlyLoggedIn: Ref<null | boolean> = ref(null);
 
-async function login() {
-  correctlyLoggedIn.value = await publicApiService.login(loginRequest);
+function login() {
+  publicApiService.login(loginRequest);
 }
 </script>
 
@@ -45,7 +43,8 @@ async function login() {
         <div class="col-auto">
           <button
             :class="{ disabled: !loginRequest.username.length || !loginRequest.password.length }"
-            class="btn btn-primary">
+            class="btn btn-primary"
+            @click="login">
             Submit
           </button>
         </div>
@@ -54,4 +53,11 @@ async function login() {
   </main>
 </template>
 
-<style lang="scss"></style>
+<style scoped lang="scss">
+.card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
