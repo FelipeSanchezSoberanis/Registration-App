@@ -9,6 +9,7 @@ import com.fiuady.registrationApp.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +27,16 @@ public class GroupService {
         return group.getParticipants().contains(userService.getLoggedInUser());
     }
 
-    public Group createNewGroup(Group group) {
-        group.setOwner(userService.getLoggedInUser());
+    private boolean groupNameIsTaken(Group group) {
+        return groupRepository.findByName(group.getName()).isPresent();
+    }
 
-        if (groupRepository.findByName(group.getName()).isPresent())
-            throw new GroupNameTakenException(group.getName());
+    public Group createNewGroup(Group group) {
+        if (groupNameIsTaken(group)) throw new GroupNameTakenException(group.getName());
+
+        group.setId(null);
+        group.setOwner(userService.getLoggedInUser());
+        group.setRegistrationEvents(new HashSet<>());
 
         return groupRepository.save(group);
     }

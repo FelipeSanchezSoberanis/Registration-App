@@ -16,11 +16,15 @@ public class UserService {
     @Autowired private UserRepository userRepo;
 
     public User getLoggedInUser() {
-        AppUserDetails loggedInUserDetails =
+        AppUserDetails userDetails =
                 (AppUserDetails)
                         SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return userRepo.findById(loggedInUserDetails.getId()).get();
+        User user = new User();
+        user.setUsername(userDetails.getUsername());
+        user.setId(userDetails.getId());
+
+        return user;
     }
 
     public Optional<User> getById(Long userId) {
