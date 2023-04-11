@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,5 +72,9 @@ public class UserService {
         loggedInUserRole.getPermissions().add(permission);
 
         roleRepo.save(loggedInUserRole);
+    }
+
+    public List<User> getAll() {
+        return userRepo.findAll();
     }
 }
