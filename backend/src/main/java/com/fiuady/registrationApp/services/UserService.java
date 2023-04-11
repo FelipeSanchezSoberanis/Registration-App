@@ -2,7 +2,6 @@ package com.fiuady.registrationApp.services;
 
 import static com.fiuady.registrationApp.utils.PermissionsPrefixes.USER_ROLE_PREFIX;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiuady.registrationApp.config.AppUserDetails;
 import com.fiuady.registrationApp.entities.Permission;
@@ -83,12 +82,6 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        try {
-            System.out.println(objectMapper.writeValueAsString(user));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
         if (userRepo.findByUsername(user.getUsername()).isPresent())
             throw new UsernameTakenException(user.getUsername());
 
