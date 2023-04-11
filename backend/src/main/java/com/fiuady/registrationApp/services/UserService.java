@@ -55,10 +55,15 @@ public class UserService {
     }
 
     public void addPermissionToLoggedInUser(String permissionName) {
-        Permission permission = new Permission();
-        permission.setName(permissionName);
-
-        permissionRepo.saveAndFlush(permission);
+        Permission permission;
+        Optional<Permission> permissionOpt = permissionRepo.findByName(permissionName);
+        if (permissionOpt.isPresent()) {
+            permission = permissionOpt.get();
+        } else {
+            permission = new Permission();
+            permission.setName(permissionName);
+            permissionRepo.saveAndFlush(permission);
+        }
 
         Role loggedInUserRole =
                 roleRepo.findByName(USER_ROLE_PREFIX + getLoggedInUser().getUsername()).get();
