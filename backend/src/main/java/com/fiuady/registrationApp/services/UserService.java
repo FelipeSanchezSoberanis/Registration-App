@@ -2,14 +2,17 @@ package com.fiuady.registrationApp.services;
 
 import static com.fiuady.registrationApp.utils.PermissionsPrefixes.USER_ROLE_PREFIX;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiuady.registrationApp.config.AppUserDetails;
 import com.fiuady.registrationApp.entities.Permission;
 import com.fiuady.registrationApp.entities.Role;
 import com.fiuady.registrationApp.entities.User;
+import com.fiuady.registrationApp.exceptions.UsernameTakenException;
 import com.fiuady.registrationApp.repositories.PermissionRepository;
 import com.fiuady.registrationApp.repositories.RoleRepository;
 import com.fiuady.registrationApp.repositories.UserRepository;
+import com.fiuady.registrationApp.utils.PermissionsPrefixes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -76,5 +80,28 @@ public class UserService {
 
     public List<User> getAll() {
         return userRepo.findAll();
+    }
+
+    public User createUser(User user) {
+        try {
+            System.out.println(objectMapper.writeValueAsString(user));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        if (userRepo.findByUsername(user.getUsername()).isPresent())
+            throw new UsernameTakenException(user.getUsername());
+
+        Role role = new Role();
+        role.setName(PermissionsPrefixes.USER_ROLE_PREFIX + user.getUsername());
+
+        roleRepo.saveAndFlush(role);
+
+        user.setId(null);
+        user.setRoles(Set.of(role));
+
+        userRepo.save(user);
+
+        return user;
     }
 }
