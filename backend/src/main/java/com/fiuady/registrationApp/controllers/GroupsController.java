@@ -1,6 +1,7 @@
 package com.fiuady.registrationApp.controllers;
 
 import com.fiuady.registrationApp.entities.Group;
+import com.fiuady.registrationApp.entities.User;
 import com.fiuady.registrationApp.services.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,18 @@ public class GroupsController {
 
     @GetMapping
     public ResponseEntity<List<Group>> getLoggedInUserGroups() {
-        return new ResponseEntity<>(groupService.getAllForLoggedInUser(), HttpStatus.OK);
+        List<Group> loggedInUserGroups = groupService.getAllForLoggedInUser();
+
+        for (Group group : loggedInUserGroups) {
+            group.getOwner().setPassword(null);
+            group.getOwner().setRoles(null);
+            for (User user : group.getParticipants()) {
+                user.setPassword(null);
+                user.setRoles(null);
+            }
+        }
+
+        return new ResponseEntity<>(loggedInUserGroups, HttpStatus.OK);
     }
 
     @DeleteMapping("/{groupId}")

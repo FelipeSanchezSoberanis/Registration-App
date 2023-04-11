@@ -3,7 +3,6 @@ package com.fiuady.registrationApp.services;
 import static com.fiuady.registrationApp.utils.PermissionsPrefixes.DELETE_GROUP_PREFIX;
 
 import com.fiuady.registrationApp.entities.Group;
-import com.fiuady.registrationApp.entities.User;
 import com.fiuady.registrationApp.exceptions.GroupNameTakenException;
 import com.fiuady.registrationApp.exceptions.GroupNotFoundException;
 import com.fiuady.registrationApp.exceptions.InsufficientPermissionsException;
@@ -73,16 +72,6 @@ public class GroupService {
         Long loggedInUserId = userService.getLoggedInUser().getId();
         List<Group> loggedInUserGroups =
                 groupRepository.findByOwnerIdOrParticipantsId(loggedInUserId, loggedInUserId);
-
-        for (Group group : loggedInUserGroups) {
-            group.getOwner().setPassword(null);
-            group.getOwner().setRoles(null);
-            for (User user : group.getParticipants()) {
-                user.setPassword(null);
-                user.setRoles(null);
-            }
-        }
-
         return loggedInUserGroups;
     }
 }
