@@ -1,6 +1,9 @@
 package com.fiuady.registrationApp.services;
 
+import static com.fiuady.registrationApp.utils.PermissionsPrefixes.DELETE_GROUP_PREFIX;
+
 import com.fiuady.registrationApp.entities.Group;
+import com.fiuady.registrationApp.entities.User;
 import com.fiuady.registrationApp.exceptions.GroupNameTakenException;
 import com.fiuady.registrationApp.exceptions.GroupNotFoundException;
 import com.fiuady.registrationApp.exceptions.InsufficientPermissionsException;
@@ -27,23 +30,19 @@ public class GroupService {
         return group.getParticipants().contains(userService.getLoggedInUser());
     }
 
-    private boolean groupNameIsTaken(Group group) {
-        return groupRepository.findByName(group.getName()).isPresent();
-    }
-
     public Group createNewGroup(Group group) {
-        if (groupNameIsTaken(group)) throw new GroupNameTakenException(group.getName());
+        boolean groupNameAlreadyExists = groupRepository.findByName(group.getName()).isPresent();
+        if (groupNameAlreadyExists) throw new GroupNameTakenException(group.getName());
 
         group.setId(null);
         group.setOwner(userService.getLoggedInUser());
         group.setRegistrationEvents(new HashSet<>());
 
-        return groupRepository.save(group);
-    }
+        groupRepository.saveAndFlush(group);
 
-    public List<Group> getLoggedInUserGroups() {
-        Long id = userService.getLoggedInUser().getId();
-        return groupRepository.findByOwnerIdOrParticipantsId(id, id);
+        userService.addPermissionToLoggedInUser(DELETE_GROUP_PREFIX + group.getId());
+
+        return group;
     }
 
     public void deleteById(Long groupId) {
@@ -70,5 +69,22 @@ public class GroupService {
                     "You are not the owner nor a participant in this group");
 
         return group;
+    }
+
+    public List<Group> getAllForLoggedInUser() {
+        Long loggedInUserId = userService.getLoggedInUser().getId();
+        List<Group> loggedInUserGroups =
+                groupRepository.findByOwnerIdOrParticipantsId(loggedInUserId, loggedInUserId);
+
+        for (Group group : loggedInUserGroups) {
+            group.getOwner().setPassword(null);
+            group.getOwner().setRoles(null);
+            for (User user : group.getParticipants()) {
+                user.setPassword(null);
+                user.setRoles(null);
+            }
+        }
+
+        return loggedInUserGroups;
     }
 }

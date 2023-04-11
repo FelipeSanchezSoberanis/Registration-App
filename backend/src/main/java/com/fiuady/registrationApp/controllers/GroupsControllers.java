@@ -1,9 +1,7 @@
 package com.fiuady.registrationApp.controllers;
 
 import com.fiuady.registrationApp.entities.Group;
-import com.fiuady.registrationApp.entities.GroupSummary;
 import com.fiuady.registrationApp.services.GroupService;
-import com.fiuady.registrationApp.services.GroupSummaryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,6 @@ import java.util.List;
 public class GroupsControllers {
 
     @Autowired private GroupService groupService;
-    @Autowired private GroupSummaryService groupSummaryService;
 
     @PostMapping
     public ResponseEntity<Group> createGroup(@RequestBody Group group) {
@@ -29,8 +26,8 @@ public class GroupsControllers {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupSummary>> getLoggedInUserGroups() {
-        return new ResponseEntity<>(groupSummaryService.getAllForLoggedInUser(), HttpStatus.OK);
+    public ResponseEntity<List<Group>> getLoggedInUserGroups() {
+        return new ResponseEntity<>(groupService.getAllForLoggedInUser(), HttpStatus.OK);
     }
 
     // @GetMapping("/{groupId}")
@@ -41,11 +38,5 @@ public class GroupsControllers {
     // group.getOwner().setRoles(null);
 
     // return new ResponseEntity<>(group, HttpStatus.OK);
-    // }
-
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Object> deleteGroup(@PathVariable("id") Long groupId) {
-    // groupService.deleteById(groupId);
-    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     // }
 }
