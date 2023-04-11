@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/groups")
-public class GroupsControllers {
+public class GroupsController {
 
     @Autowired private GroupService groupService;
 
