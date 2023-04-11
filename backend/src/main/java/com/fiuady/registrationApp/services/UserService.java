@@ -2,6 +2,7 @@ package com.fiuady.registrationApp.services;
 
 import static com.fiuady.registrationApp.utils.PermissionsPrefixes.USER_ROLE_PREFIX;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiuady.registrationApp.config.AppUserDetails;
 import com.fiuady.registrationApp.entities.Permission;
 import com.fiuady.registrationApp.entities.Role;
@@ -11,6 +12,7 @@ import com.fiuady.registrationApp.repositories.RoleRepository;
 import com.fiuady.registrationApp.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class UserService {
     @Autowired private UserRepository userRepo;
     @Autowired private PermissionRepository permissionRepo;
     @Autowired private RoleRepository roleRepo;
+    @Autowired private ObjectMapper objectMapper;
 
     public User getLoggedInUser() {
         AppUserDetails userDetails =
@@ -33,6 +36,14 @@ public class UserService {
         user.setId(userDetails.getId());
 
         return user;
+    }
+
+    public boolean loggedInUserHasPermission(String permissionName) {
+        AppUserDetails userDetails =
+                (AppUserDetails)
+                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userDetails.getAuthorities().contains(new SimpleGrantedAuthority(permissionName));
     }
 
     public Optional<User> getById(Long userId) {

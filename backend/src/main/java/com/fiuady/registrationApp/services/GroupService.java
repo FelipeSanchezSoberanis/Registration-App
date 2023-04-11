@@ -22,13 +22,9 @@ public class GroupService {
     @Autowired private GroupRepository groupRepository;
     @Autowired private UserService userService;
 
-    private boolean loggedInUserOwnsGroup(Group group) {
-        return group.getOwner().equals(userService.getLoggedInUser());
-    }
-
-    private boolean loggedInUserParticipatesInGroup(Group group) {
-        return group.getParticipants().contains(userService.getLoggedInUser());
-    }
+    // private boolean loggedInUserParticipatesInGroup(Group group) {
+    //     return group.getParticipants().contains(userService.getLoggedInUser());
+    // }
 
     public Group createNewGroup(Group group) {
         boolean groupNameAlreadyExists = groupRepository.findByName(group.getName()).isPresent();
@@ -50,26 +46,28 @@ public class GroupService {
 
         if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
 
-        if (!loggedInUserOwnsGroup(groupOpt.get()))
+        boolean loggedInUserCanDeleteGroup =
+                userService.loggedInUserHasPermission(DELETE_GROUP_PREFIX + groupId);
+        if (!loggedInUserCanDeleteGroup)
             throw new InsufficientPermissionsException(
-                    "You cant delete a group you are not the owner of");
+                    "You don't have the permission to delete this group");
 
         groupRepository.delete(groupOpt.get());
     }
 
-    public Group getById(Long groupId) {
-        Optional<Group> groupOpt = groupRepository.findById(groupId);
+    // public Group getById(Long groupId) {
+    //     Optional<Group> groupOpt = groupRepository.findById(groupId);
 
-        if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
+    //     if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
 
-        Group group = groupOpt.get();
+    //     Group group = groupOpt.get();
 
-        if (!loggedInUserOwnsGroup(group) && !loggedInUserParticipatesInGroup(group))
-            throw new InsufficientPermissionsException(
-                    "You are not the owner nor a participant in this group");
+    //     if (!loggedInUserOwnsGroup(group) && !loggedInUserParticipatesInGroup(group))
+    //         throw new InsufficientPermissionsException(
+    //                 "You are not the owner nor a participant in this group");
 
-        return group;
-    }
+    //     return group;
+    // }
 
     public List<Group> getAllForLoggedInUser() {
         Long loggedInUserId = userService.getLoggedInUser().getId();
