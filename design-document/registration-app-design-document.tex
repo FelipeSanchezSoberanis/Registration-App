@@ -1,0 +1,71 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=1in}
+
+\title{Registration app design document}
+\author{Felipe Sánchez Soberanis}
+\date{Last updated: \today}
+
+\newcommand{\bolditem}[1]{\item \textbf{#1}}
+\newcommand{\newpagesection}[1]{\newpage \section{#1}}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpagesection{Introduction}
+
+\subsection{Problem}
+
+MIFI has a set of events every x amount of time which students have to attend. There have been multiple ways of keeping track of attendance, but they all have some kind of defect that does not make them the best possible option. The best option so far, has been to send all students a qr code before a given event, so the registrars can just scan the qr code and automatically have the student registered as a correct attendance. There was already an app in the works with this functionality, but was lost as the original developer left the project.
+
+\subsection{Proposed solution}
+
+The proposed solution in this document is to have the qr code functionality but inside a web application, so that it doesn't have to be installed and can be accessed from any place, as long as there is internet available. The qr code functionality is going to be the main focus of the development.
+
+The application will have some extra functionality to allow the users to see, for example, attendance percentages, or any other statistic or information required; as well as permission based functions, to allow to have extra control on which users can make which actions.
+
+The simplified intended way of use, is the following:
+
+A user inside the application creates a group, the, inside that group, creates a registration event with a start time, end time, list of registrars and list of attendees with email. The application looks at the event start time and then emails qr codes to all the event attendees. Then, when the event start time is met, al registrars have the ability to scan the attendees' qr codes, to enlist them as a correct attendance for said event.
+
+This will be further explained in the user manual.
+
+\newpagesection{Glossary}
+
+\begin{itemize}
+    \bolditem{Attendee}:
+    \bolditem{Group}:
+    \bolditem{Participant}:
+    \bolditem{Permission}:
+    \bolditem{Registrar}:
+    \bolditem{Registration event}:
+    \bolditem{Role}:
+    \bolditem{User}:
+\end{itemize}
+
+\newpagesection{Backend}
+
+\subsection{Requirements}
+
+\subsection{Entities}
+
+\subsection{Controllers}
+
+\subsubsection{Paths}
+
+\newpagesection{Frontend}
+
+\subsection{Requirements}
+
+\subsection{Views}
+
+\subsection{Components}
+
+\end{document}
+
