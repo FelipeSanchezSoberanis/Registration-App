@@ -1,4 +1,4 @@
-\documentclass[12pt, letterpaper]{article}
+\documentclass[12pt, letterpaper]{report}
 
 \usepackage{geometry}
 \usepackage[hidelinks]{hyperref}
@@ -10,7 +10,6 @@
 \date{Last updated: \today}
 
 \newcommand{\bolditem}[1]{\item \textbf{#1}}
-\newcommand{\newpagesection}[1]{\newpage \section{#1}}
 
 \begin{document}
 
@@ -18,13 +17,13 @@
 
 \tableofcontents
 
-\newpagesection{Introduction}
+\chapter{Introduction}
 
-\subsection{Problem}
+\section{Problem}
 
 MIFI has a set of events every x amount of time which students have to attend. There have been multiple ways of keeping track of attendance, but they all have some kind of defect that does not make them the best possible option. The best option so far, has been to send all students a qr code before a given event, so the registrars can just scan the qr code and automatically have the student registered as a correct attendance. There was already an app in the works with this functionality, but was lost as the original developer left the project.
 
-\subsection{Proposed solution}
+\section{Proposed solution}
 
 The proposed solution in this document is to have the qr code functionality but inside a web application, so that it doesn't have to be installed and can be accessed from any place, as long as there is internet available. The qr code functionality is going to be the main focus of the development.
 
@@ -36,7 +35,7 @@ A user inside the application creates a group, the, inside that group, creates a
 
 This will be further explained in the user manual.
 
-\newpagesection{Glossary}
+\chapter{Glossary}
 
 \begin{itemize}
     \bolditem{Attendee}:
@@ -49,23 +48,23 @@ This will be further explained in the user manual.
     \bolditem{User}:
 \end{itemize}
 
-\newpagesection{Backend}
+\chapter{Backend}
 
-\subsection{Requirements}
+\section{Requirements}
 
-\subsection{Entities}
+\section{Entities}
 
-\subsection{Controllers}
+\section{Controllers}
 
-\subsubsection{Paths}
+\subsection{Paths}
 
-\newpagesection{Frontend}
+\chapter{Frontend}
 
-\subsection{Requirements}
+\section{Requirements}
 
-\subsection{Views}
+\section{Views}
 
-\subsection{Components}
+\section{Components}
 
 \end{document}
 
