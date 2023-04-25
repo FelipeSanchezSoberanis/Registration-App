@@ -15,14 +15,13 @@ import com.fiuady.registrationApp.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GroupService {
 
-    @Autowired private GroupRepository groupRepository;
+    @Autowired private GroupRepository groupRepo;
     @Autowired private UserService userService;
     @Autowired private RoleRepository roleRepo;
     @Autowired private PermissionRepository permissionRepo;
@@ -31,23 +30,33 @@ public class GroupService {
     //     return group.getParticipants().contains(userService.getLoggedInUser());
     // }
 
-    public Group createNewGroup(Group group) {
-        boolean groupNameAlreadyExists = groupRepository.findByName(group.getName()).isPresent();
-        if (groupNameAlreadyExists) throw new GroupNameTakenException(group.getName());
+    public Group createNewGroup(String groupName) {
+        if (groupRepo.existsByName(groupName)) throw new GroupNameTakenException(groupName);
 
-        group.setId(null);
+        Group group = new Group();
+        group.setName(groupName);
         group.setOwner(userService.getLoggedInUser());
-        group.setRegistrationEvents(new HashSet<>());
 
-        groupRepository.saveAndFlush(group);
+        groupRepo.saveAndFlush(group);
 
-        userService.addPermissionToLoggedInUser(DELETE_GROUP_PREFIX + group.getId());
+        return group;
+    }
+
+    public Group createNewGroup(Group group) {
+        if (groupRepo.existsByName(group.getName()))
+            throw new GroupNameTakenException(group.getName());
+
+        // group.setId(null);
+        // group.setOwner(userService.getLoggedInUser());
+        // group.setRegistrationEvents(new HashSet<>());
+
+        // userService.addPermissionToLoggedInUser(DELETE_GROUP_PREFIX + group.getId());
 
         return group;
     }
 
     public void deleteById(Long groupId) {
-        Optional<Group> groupOpt = groupRepository.findById(groupId);
+        Optional<Group> groupOpt = groupRepo.findById(groupId);
 
         if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
 
@@ -57,7 +66,7 @@ public class GroupService {
             throw new InsufficientPermissionsException(
                     "You don't have the permission to delete this group");
 
-        groupRepository.delete(groupOpt.get());
+        groupRepo.delete(groupOpt.get());
 
         List<Role> rolesWithDeletePerm = roleRepo.findByPermissionsName(permissionName);
         Permission permission = permissionRepo.findByName(permissionName).get();
@@ -87,7 +96,7 @@ public class GroupService {
     public List<Group> getAllForLoggedInUser() {
         Long loggedInUserId = userService.getLoggedInUser().getId();
         List<Group> loggedInUserGroups =
-                groupRepository.findByOwnerIdOrParticipantsId(loggedInUserId, loggedInUserId);
+                groupRepo.findByOwnerIdOrParticipantsId(loggedInUserId, loggedInUserId);
         return loggedInUserGroups;
     }
 }
