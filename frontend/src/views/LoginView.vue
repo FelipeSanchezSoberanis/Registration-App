@@ -2,14 +2,20 @@
 import { reactive } from "vue";
 import type { LoginRequest } from "../types/AuthTypes";
 import { publicApiService } from "../axios";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const loginRequest: LoginRequest = reactive({
   username: "",
   password: ""
 });
 
-function login() {
-  publicApiService.login(loginRequest);
+async function login() {
+  await publicApiService.login(loginRequest);
+  if (authStore.isLoggedIn) router.push({ path: "/groups" });
 }
 </script>
 

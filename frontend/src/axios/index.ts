@@ -22,8 +22,6 @@ export const publicApiService = {
 
     const authStore = useAuthStore();
     authStore.isLoggedIn = true;
-
-    router.push({ path: "/groups" });
   },
   getNewAccessToken: async (): Promise<void> => {
     const authStore = useAuthStore();
