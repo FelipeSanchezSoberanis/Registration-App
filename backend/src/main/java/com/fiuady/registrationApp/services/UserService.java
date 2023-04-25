@@ -83,23 +83,6 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public User createUser(User user) {
-        if (userRepo.findByUsername(user.getUsername()).isPresent())
-            throw new UsernameTakenException(user.getUsername());
-
-        Role role = new Role();
-        role.setName(PermissionsPrefixes.USER_ROLE_PREFIX + user.getUsername());
-
-        roleRepo.saveAndFlush(role);
-
-        user.setId(null);
-        user.setRoles(Set.of(role));
-
-        userRepo.save(user);
-
-        return user;
-    }
-
     public User createUser(String username, String password) {
         if (userRepo.existsByUsername(username)) throw new UsernameTakenException(username);
 
