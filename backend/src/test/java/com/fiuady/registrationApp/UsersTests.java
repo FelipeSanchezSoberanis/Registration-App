@@ -3,10 +3,12 @@ package com.fiuady.registrationApp;
 import static com.fiuady.registrationApp.utils.PermissionsPrefixes.USER_ROLE_PREFIX;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fiuady.registrationApp.entities.Role;
 import com.fiuady.registrationApp.entities.User;
+import com.fiuady.registrationApp.exceptions.UsernameTakenException;
 import com.fiuady.registrationApp.repositories.RoleRepository;
 import com.fiuady.registrationApp.repositories.UserRepository;
 import com.fiuady.registrationApp.services.UserService;
@@ -62,5 +64,8 @@ class UsersTests {
 
         // Check new user's role was assigned to new user
         assertTrue(createdUser.getRoles().contains(createdUserRole));
+        // Check exception is thrown if username is taken
+        assertThrows(
+                UsernameTakenException.class, () -> userService.createUser(username, password));
     }
 }
