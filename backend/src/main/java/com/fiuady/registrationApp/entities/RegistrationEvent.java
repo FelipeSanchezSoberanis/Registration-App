@@ -35,7 +35,7 @@ public class RegistrationEvent {
     private ZonedDateTime createdAt;
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
-    private Set<String> attendeesEmails;
+    @ManyToMany private Set<Attendee> attendees;
     @ManyToMany private Set<User> registrars;
     @ManyToOne private User owner;
     @ManyToOne private Group group;
