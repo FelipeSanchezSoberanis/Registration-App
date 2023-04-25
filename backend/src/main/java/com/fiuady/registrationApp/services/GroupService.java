@@ -15,6 +15,7 @@ import com.fiuady.registrationApp.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class GroupService {
         Group group = new Group();
         group.setName(groupName);
         group.setOwner(userService.getLoggedInUser());
+        group.setCreatedAt(ZonedDateTime.now());
 
         groupRepo.saveAndFlush(group);
 

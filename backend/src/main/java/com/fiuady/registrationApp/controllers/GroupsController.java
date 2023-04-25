@@ -25,7 +25,8 @@ public class GroupsController {
 
     @PostMapping
     public ResponseEntity<Group> createGroup(@RequestBody Group group) {
-        return new ResponseEntity<>(groupService.createNewGroup(group), HttpStatus.CREATED);
+        Group newGroup = groupService.createNewGroup(group.getName());
+        return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
     @GetMapping

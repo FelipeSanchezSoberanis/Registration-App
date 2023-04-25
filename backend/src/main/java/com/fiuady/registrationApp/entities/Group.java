@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,7 @@ public class Group {
     private Long id;
 
     private String name;
+    private ZonedDateTime createdAt;
     @ManyToOne private User owner;
 
     @OneToMany(mappedBy = "group")
