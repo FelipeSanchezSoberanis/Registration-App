@@ -1,5 +1,8 @@
 package com.fiuady.registrationApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +26,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonInclude(value = Include.NON_NULL)
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
