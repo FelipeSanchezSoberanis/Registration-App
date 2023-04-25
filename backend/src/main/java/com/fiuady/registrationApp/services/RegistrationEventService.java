@@ -12,6 +12,7 @@ import com.fiuady.registrationApp.repositories.RegistrationEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,24 @@ public class RegistrationEventService {
     @Autowired private UserService userService;
     @Autowired private RegistrationEventRepository registrationEventRepository;
     @Autowired private GroupRepository groupRepository;
+
+    public RegistrationEvent createRegistrationEvent(
+            Long groupId, String name, ZonedDateTime startTime, ZonedDateTime endTime) {
+        if (!groupRepository.existsById(groupId)) throw new GroupNotFoundException(groupId);
+        if (registrationEventRepository.existsByName(name))
+            throw new RegistrationEventNameTakenException(name);
+
+        RegistrationEvent event = new RegistrationEvent();
+        event.setName(name);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setOwner(userService.getLoggedInUser());
+        event.setCreatedAt(ZonedDateTime.now());
+
+        registrationEventRepository.saveAndFlush(event);
+
+        return event;
+    }
 
     public RegistrationEvent createRegistrationEvent(
             Long groupId, RegistrationEvent registrationEvent) {

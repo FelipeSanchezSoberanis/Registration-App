@@ -13,4 +13,6 @@ public interface RegistrationEventRepository extends JpaRepository<RegistrationE
     Optional<RegistrationEvent> findByName(String name);
 
     List<RegistrationEvent> findByGroupId(Long groupId);
+
+    Boolean existsByName(String name);
 }

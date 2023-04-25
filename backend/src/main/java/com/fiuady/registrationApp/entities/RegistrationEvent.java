@@ -32,6 +32,7 @@ public class RegistrationEvent {
     private Long id;
 
     private String name;
+    private ZonedDateTime createdAt;
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
     private Set<String> attendeesEmails;
