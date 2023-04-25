@@ -2,14 +2,19 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { useAuthStore } from "../stores/auth";
 import type { LoginRequest, LoginRequestResponse } from "../types/AuthTypes";
-import type { Group } from "../types/JavaTypes";
+import type { Group, ApiError } from "../types/JavaTypes";
 import router from "../router/index";
 
 const publicApi = axios.create();
 const authenticatedApi = axios.create();
 
+const axiosValidateStatus = (_status: number) => true;
+
 publicApi.defaults.baseURL = "http://localhost:8080";
+publicApi.defaults.validateStatus = axiosValidateStatus;
+
 authenticatedApi.defaults.baseURL = publicApi.defaults.baseURL;
+authenticatedApi.defaults.validateStatus = axiosValidateStatus;
 
 export const publicApiService = {
   login: async (loginRequest: LoginRequest): Promise<void> => {
@@ -59,5 +64,12 @@ export const authenticatedApiService = {
     if (res.status !== 200) return [];
 
     return res.data;
+  },
+  createNewGroup: async (newGroupName: string): Promise<[number, Group | ApiError]> => {
+    const res: AxiosResponse<Group | ApiError> = await authenticatedApi.post("/groups", {
+      name: newGroupName
+    });
+
+    return [res.status, res.data];
   }
 };
