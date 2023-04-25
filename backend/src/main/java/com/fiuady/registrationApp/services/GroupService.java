@@ -5,6 +5,7 @@ import static com.fiuady.registrationApp.utils.PermissionsPrefixes.DELETE_GROUP_
 import com.fiuady.registrationApp.entities.Group;
 import com.fiuady.registrationApp.entities.Permission;
 import com.fiuady.registrationApp.entities.Role;
+import com.fiuady.registrationApp.entities.User;
 import com.fiuady.registrationApp.exceptions.GroupNameTakenException;
 import com.fiuady.registrationApp.exceptions.GroupNotFoundException;
 import com.fiuady.registrationApp.exceptions.InsufficientPermissionsException;
@@ -100,5 +101,15 @@ public class GroupService {
         List<Group> loggedInUserGroups =
                 groupRepo.findByOwnerIdOrParticipantsId(loggedInUserId, loggedInUserId);
         return loggedInUserGroups;
+    }
+
+    public void addParticipantsToGroup(Long groupId, List<User> newParticipants) {
+        Optional<Group> groupOpt = groupRepo.findById(groupId);
+        if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
+
+        Group group = groupOpt.get();
+        group.getParticipants().addAll(newParticipants);
+
+        groupRepo.save(group);
     }
 }
