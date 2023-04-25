@@ -112,4 +112,14 @@ public class GroupService {
 
         groupRepo.save(group);
     }
+
+    public void removeParticipantsFromGroup(Long groupId, List<User> participantsToRemove) {
+        Optional<Group> groupOpt = groupRepo.findById(groupId);
+        if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
+
+        Group group = groupOpt.get();
+        group.getParticipants().removeAll(participantsToRemove);
+
+        groupRepo.save(group);
+    }
 }

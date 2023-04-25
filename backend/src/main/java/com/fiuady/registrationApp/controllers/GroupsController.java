@@ -7,6 +7,7 @@ import com.fiuady.registrationApp.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,13 @@ public class GroupsController {
             @PathVariable("groupId") Long groupId, @RequestBody List<User> newParticipants) {
         groupService.addParticipantsToGroup(groupId, newParticipants);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{groupId}/participants")
+    public ResponseEntity<Object> removeParticipantsFromGroup(
+            @PathVariable("groupId") Long groupId, @RequestBody List<User> participantsToRemove) {
+        groupService.removeParticipantsFromGroup(groupId, participantsToRemove);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // @DeleteMapping("/{groupId}")
