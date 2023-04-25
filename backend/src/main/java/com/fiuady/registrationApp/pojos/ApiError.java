@@ -13,6 +13,11 @@ public class ApiError {
     private String message;
     private ZonedDateTime timestamp;
 
+    public ApiError(RuntimeException ex) {
+        timestamp = ZonedDateTime.now();
+        message = ex.getMessage();
+    }
+
     public ApiError() {
         timestamp = ZonedDateTime.now();
     }

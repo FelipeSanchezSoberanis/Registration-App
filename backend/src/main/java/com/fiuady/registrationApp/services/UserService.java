@@ -16,6 +16,7 @@ import com.fiuady.registrationApp.utils.PermissionsPrefixes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class UserService {
     @Autowired private PermissionRepository permissionRepo;
     @Autowired private RoleRepository roleRepo;
     @Autowired private ObjectMapper objectMapper;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     public User getLoggedInUser() {
         AppUserDetails userDetails =
@@ -94,6 +96,23 @@ public class UserService {
         user.setRoles(Set.of(role));
 
         userRepo.save(user);
+
+        return user;
+    }
+
+    public User createUser(String username, String password) {
+        if (userRepo.existsByUsername(username)) throw new UsernameTakenException(username);
+
+        Role role = new Role();
+        role.setName(PermissionsPrefixes.USER_ROLE_PREFIX + username);
+        roleRepo.saveAndFlush(role);
+
+        User user = new User();
+        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(username);
+        user.setRoles(Set.of(role));
+
+        userRepo.saveAndFlush(user);
 
         return user;
     }

@@ -13,9 +13,6 @@ public class UsersExceptionsHandler {
 
     @ExceptionHandler(UsernameTakenException.class)
     public ResponseEntity<ApiError> handleUsernameTakenException(UsernameTakenException ex) {
-        ApiError apiError = new ApiError();
-        apiError.setMessage(ex.getMessage());
-
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiError(ex), HttpStatus.BAD_REQUEST);
     }
 }
