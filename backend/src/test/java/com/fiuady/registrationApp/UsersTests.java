@@ -43,19 +43,24 @@ class UsersTests {
 
         Optional<User> createdUserOpt = userRepo.findByUsername(username);
 
+        // Check user was saved
         assertTrue(createdUserOpt.isPresent());
 
         User createdUser = createdUserOpt.get();
 
+        // Check username was saved
         assertEquals(username, createdUser.getUsername());
+        // Check password was hashed
         assertTrue(passwordEncoder.matches(password, createdUser.getPassword()));
 
         Optional<Role> createdUserRoleOpt = roleRepo.findByName(USER_ROLE_PREFIX + username);
 
+        // Check new user's role was created
         assertTrue(createdUserRoleOpt.isPresent());
 
         Role createdUserRole = createdUserRoleOpt.get();
 
+        // Check new user's role was assigned to new user
         assertTrue(createdUser.getRoles().contains(createdUserRole));
     }
 }
