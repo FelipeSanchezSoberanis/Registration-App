@@ -2,9 +2,7 @@ package com.fiuady.registrationApp.services;
 
 import com.fiuady.registrationApp.entities.Group;
 import com.fiuady.registrationApp.entities.RegistrationEvent;
-import com.fiuady.registrationApp.entities.User;
 import com.fiuady.registrationApp.exceptions.GroupNotFoundException;
-import com.fiuady.registrationApp.exceptions.InsufficientPermissionsException;
 import com.fiuady.registrationApp.exceptions.RegistrationEventNameTakenException;
 import com.fiuady.registrationApp.repositories.GroupRepository;
 import com.fiuady.registrationApp.repositories.RegistrationEventRepository;
@@ -25,7 +23,8 @@ public class RegistrationEventService {
 
     public RegistrationEvent createRegistrationEvent(
             Long groupId, String name, ZonedDateTime startTime, ZonedDateTime endTime) {
-        if (!groupRepository.existsById(groupId)) throw new GroupNotFoundException(groupId);
+        Optional<Group> groupOpt = groupRepository.findById(groupId);
+        if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
         if (registrationEventRepository.existsByName(name))
             throw new RegistrationEventNameTakenException(name);
 
@@ -35,38 +34,21 @@ public class RegistrationEventService {
         event.setEndTime(endTime);
         event.setOwner(userService.getLoggedInUser());
         event.setCreatedAt(ZonedDateTime.now());
+        event.setGroup(groupOpt.get());
 
         registrationEventRepository.saveAndFlush(event);
 
         return event;
     }
 
-    public RegistrationEvent createRegistrationEvent(
-            Long groupId, RegistrationEvent registrationEvent) {
-
-        Optional<Group> groupOpt = groupRepository.findById(groupId);
-
-        if (groupOpt.isEmpty()) throw new GroupNotFoundException(groupId);
-        if (registrationEventRepository.findByName(registrationEvent.getName()).isPresent())
-            throw new RegistrationEventNameTakenException(registrationEvent.getName());
-
-        User loggedInUser = userService.getLoggedInUser();
-
-        if (!groupOpt.get().getOwner().equals(loggedInUser)
-                && !groupOpt.get().getParticipants().contains(loggedInUser))
-            throw new InsufficientPermissionsException(
-                    "You're not the owner or a participant of this group");
-
-        registrationEvent.setOwner(userService.getLoggedInUser());
-
-        registrationEventRepository.saveAndFlush(registrationEvent);
-
-        return registrationEvent;
-    }
-
     public List<RegistrationEvent> getByGroupId(Long groupId) {
         if (groupRepository.findById(groupId).isEmpty()) throw new GroupNotFoundException(groupId);
 
+        return registrationEventRepository.findByGroupId(groupId);
+    }
+
+    public List<RegistrationEvent> getInGroupForLoggedInUser(Long groupId) {
+        if (!groupRepository.existsById(groupId)) throw new GroupNotFoundException(groupId);
         return registrationEventRepository.findByGroupId(groupId);
     }
 }
