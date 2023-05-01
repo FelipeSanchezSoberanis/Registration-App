@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
-import type { ApiError, Group } from "../types/JavaTypes";
+import { ApiError, Group } from "../types/JavaTypes";
 import { authenticatedApiService } from "../axios/index";
 import { RouterLink } from "vue-router";
 import { timeDiffFromNowToString } from "../utils/DateTimeUtils";
@@ -12,12 +12,12 @@ const showCreateGroupPopup: Ref<boolean> = ref(false);
 const newGroupName: Ref<string> = ref("");
 
 async function createNewGroup() {
-  const [statusCode, res] = await authenticatedApiService.createNewGroup(newGroupName.value);
+  const res = await authenticatedApiService.createNewGroup(newGroupName.value);
 
-  if (statusCode === 201) {
+  if (res instanceof Group) {
     const newGroup = res as Group;
     groups.value.unshift(newGroup);
-  } else {
+  } else if (res instanceof ApiError) {
     const error = res as ApiError;
     console.log(error);
   }
@@ -50,7 +50,7 @@ onMounted(() => {
     <RouterLink class="card p-4 mb-3" v-for="group in groups" :to="{ path: `/groups/${group.id}` }">
       <div class="row">
         <div class="col">{{ group.name }}</div>
-        <div class="col">Owner: {{ group.owner?.username }}</div>
+        <div class="col">Owner: {{ group.owner.username }}</div>
         <div class="col-auto">{{ timeDiffFromNowToString(group.createdAt) }}</div>
       </div>
     </RouterLink>

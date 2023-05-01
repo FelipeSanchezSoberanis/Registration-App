@@ -65,11 +65,10 @@ export const authenticatedApiService = {
 
     return res.data;
   },
-  createNewGroup: async (newGroupName: string): Promise<[number, Group | ApiError]> => {
+  createNewGroup: async (newGroupName: string): Promise<Group | ApiError> => {
     const res: AxiosResponse<Group | ApiError> = await authenticatedApi.post("/groups", {
       name: newGroupName
     });
-
-    return [res.status, res.data];
+    return res.data;
   }
 };
