@@ -1,9 +1,9 @@
-export type User = {
+export class User {
   id: Number;
   username: String;
 };
 
-export type Group = {
+export class Group {
   id: Number;
   name: String;
   owner: User;
@@ -11,7 +11,7 @@ export type Group = {
   participants: User[];
 };
 
-export type ApiError = {
+export class ApiError {
   message: string;
   timestampe: Date;
 };
