@@ -49,6 +49,7 @@ public class RegistrationEventService {
 
     public List<RegistrationEvent> getInGroupForLoggedInUser(Long groupId) {
         if (!groupRepository.existsById(groupId)) throw new GroupNotFoundException(groupId);
+
         return registrationEventRepository.findByGroupForLoggedInUser(
                 groupId, userService.getLoggedInUser().getId());
     }

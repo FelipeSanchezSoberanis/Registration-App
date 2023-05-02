@@ -19,9 +19,9 @@ public interface RegistrationEventRepository extends JpaRepository<RegistrationE
     Boolean existsByName(String name);
 
     @Query(
-            "SELECT re FROM RegistrationEvent re JOIN re.registrars r "
+            "SELECT re FROM RegistrationEvent re LEFT JOIN re.registrars r "
                     + "WHERE re.group.id = :groupId "
-                    + "AND re.owner.id = :userId")
+                    + "AND (re.owner.id = :userId OR r.id = :userId)")
     List<RegistrationEvent> findByGroupForLoggedInUser(
             @Param("groupId") Long groupId, @Param("userId") Long userId);
 }

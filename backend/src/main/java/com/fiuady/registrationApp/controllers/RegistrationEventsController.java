@@ -42,7 +42,15 @@ public class RegistrationEventsController {
     @GetMapping("/{groupId}/registrationEvents")
     public ResponseEntity<List<RegistrationEvent>> getRegistrationEvents(
             @PathVariable("groupId") Long groupId) {
-        return new ResponseEntity<>(
-                registrationEventService.getInGroupForLoggedInUser(groupId), HttpStatus.OK);
+        List<RegistrationEvent> registrationEvents =
+                registrationEventService.getInGroupForLoggedInUser(groupId);
+
+        for (RegistrationEvent event : registrationEvents) {
+            event.getOwner().setPassword(null);
+            event.getOwner().setRoles(null);
+            event.setGroup(null);
+        }
+
+        return new ResponseEntity<>(registrationEvents, HttpStatus.OK);
     }
 }
