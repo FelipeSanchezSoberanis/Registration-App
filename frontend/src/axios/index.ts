@@ -4,6 +4,7 @@ import { useAuthStore } from "../stores/auth";
 import type { LoginRequest, LoginRequestResponse } from "../types/AuthTypes";
 import type { Group, ApiError, RegistrationEvent } from "../types/JavaTypes";
 import router from "../router/index";
+import type { CreateRegistrationEventRequest } from "@/types/FrontendTypes";
 
 const publicApi = axios.create();
 const authenticatedApi = axios.create();
@@ -77,6 +78,24 @@ export const authenticatedApiService = {
     const res: AxiosResponse<RegistrationEvent[] | ApiError> = await authenticatedApi.get(
       `/groups/${groupId}/registrationEvents`
     );
+    return res.data;
+  },
+  createNewRegistrationEvent: async (
+    groupId: number,
+    newEvent: CreateRegistrationEventRequest
+  ): Promise<RegistrationEvent | ApiError> => {
+    newEvent.startTime = new Date(newEvent.startTime.toString());
+    newEvent.endTime = new Date(newEvent.endTime.toString());
+
+    const res: AxiosResponse<RegistrationEvent | ApiError> = await authenticatedApi.post(
+      `/groups/${groupId}/registrationEvents`,
+      {
+        ...newEvent,
+        startTime: newEvent.startTime.toISOString(),
+        endTime: newEvent.endTime.toISOString()
+      }
+    );
+
     return res.data;
   }
 };
