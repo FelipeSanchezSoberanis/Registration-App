@@ -2,7 +2,7 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { useAuthStore } from "../stores/auth";
 import type { LoginRequest, LoginRequestResponse } from "../types/AuthTypes";
-import type { Group, ApiError } from "../types/JavaTypes";
+import type { Group, ApiError, RegistrationEvent } from "../types/JavaTypes";
 import router from "../router/index";
 
 const publicApi = axios.create();
@@ -69,6 +69,14 @@ export const authenticatedApiService = {
     const res: AxiosResponse<Group | ApiError> = await authenticatedApi.post("/groups", {
       name: newGroupName
     });
+    return res.data;
+  },
+  getRegistrationEventsForGroup: async (
+    groupId: number
+  ): Promise<RegistrationEvent[] | ApiError> => {
+    const res: AxiosResponse<RegistrationEvent[] | ApiError> = await authenticatedApi.get(
+      `/groups/${groupId}/registrationEvents`
+    );
     return res.data;
   }
 };

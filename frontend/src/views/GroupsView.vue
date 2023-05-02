@@ -82,8 +82,4 @@ onMounted(() => {
   </main>
 </template>
 
-<style scoped lang="scss">
-a {
-  text-decoration: none;
-}
-</style>
+<style scoped lang="scss"></style>
